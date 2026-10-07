@@ -1,35 +1,34 @@
-import { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
-import { useStudent } from '../context/StudentContext';
-import { 
-  User, 
-  ShieldCheck, 
-  Menu, 
-  X, 
-  LogOut
-} from 'lucide-react';
+import { useState } from "react";
+import { NavLink, Link } from "react-router-dom";
+import { useStudent } from "../context/useStudent";
+import { User, ShieldCheck, Menu, X, LogOut } from "lucide-react";
 
 export default function TopBar() {
   const { student, userRole, logout } = useStudent();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isTeacher = userRole === 'teacher';
-  const studentName = student?.name || 'أحمد محمد الشريف';
-  const studentGrade = student?.grade || 'الصف الثالث الثانوي';
-  const studentCode = student?.code || 'SEC3-101';
+  const isTeacher = userRole === "teacher";
+  const studentName = student?.name || "أحمد محمد الشريف";
+  const studentGrade = student?.grade || "الصف الثالث الثانوي";
+  const studentCode = student?.code || "SEC3-101";
 
   return (
     <header className="topbar">
       <div className="container topbar-inner">
-        
         {/* Brand Logo & Title */}
-        <Link to="/" className="brand-wrapper" onClick={() => setMobileMenuOpen(false)}>
+        <Link
+          to="/"
+          className="brand-wrapper"
+          onClick={() => setMobileMenuOpen(false)}
+        >
           <div className="brand-logo-box">
-            <img 
-              src="/logo.png" 
-              alt="لوجو منصة العميد" 
-              className="brand-logo-img" 
-              onError={(e) => { e.target.src = '/favicon.svg'; }}
+            <img
+              src="/logo.png"
+              alt="لوجو منصة العميد"
+              className="brand-logo-img"
+              onError={(e) => {
+                e.target.src = "/favicon.svg";
+              }}
             />
           </div>
           <div>
@@ -41,35 +40,89 @@ export default function TopBar() {
           </div>
         </Link>
 
-        {/* Center Nav Links — flex:1 so it fills available space but can shrink */}
-        <nav className="nav-menu" style={{ flex: '1 1 0', minWidth: 0, overflowX: 'auto', justifyContent: 'center' }}>
+        {/* Center Nav Links */}
+        <nav className="nav-menu" style={{ justifyContent: "center" }}>
           {isTeacher ? (
             <>
-              <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ color: 'var(--cyan)', fontWeight: 800, whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{
+                  color: "var(--cyan)",
+                  fontWeight: 800,
+                  whiteSpace: "nowrap",
+                }}
+              >
                 لوحة تحكم المستر 👨‍🏫
               </NavLink>
-              <NavLink to="/lessons" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/lessons"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ whiteSpace: "nowrap" }}
+              >
                 معاينة الدروس
               </NavLink>
-              <NavLink to="/exams" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/exams"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ whiteSpace: "nowrap" }}
+              >
                 معاينة الامتحانات
               </NavLink>
-              <NavLink to="/memos" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/memos"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ whiteSpace: "nowrap" }}
+              >
                 مذكرات PDF
               </NavLink>
             </>
           ) : (
             <>
-              <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ whiteSpace: "nowrap" }}
+              >
                 الرئيسية
               </NavLink>
-              <NavLink to="/lessons" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/lessons"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ whiteSpace: "nowrap" }}
+              >
                 الدروس
               </NavLink>
-              <NavLink to="/exams" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/exams"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ whiteSpace: "nowrap" }}
+              >
                 الامتحانات
               </NavLink>
-              <NavLink to="/memos" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ whiteSpace: 'nowrap' }}>
+              <NavLink
+                to="/memos"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ whiteSpace: "nowrap" }}
+              >
                 مذكرات PDF
               </NavLink>
             </>
@@ -77,18 +130,20 @@ export default function TopBar() {
         </nav>
 
         {/* Right Side — flexShrink:0 so it NEVER gets hidden */}
-        <div className="topbar-actions" style={{ flexShrink: 0, gap: '0.6rem' }}>
-          
+        <div
+          className="topbar-actions"
+          style={{ flexShrink: 0, gap: "0.6rem" }}
+        >
           {/* User Badge */}
           {isTeacher ? (
             <div className="teacher-topbar-badge">
               <ShieldCheck size={15} />
-              <span style={{ whiteSpace: 'nowrap' }}>أ/ محمد عبد الخالق</span>
+              <span style={{ whiteSpace: "nowrap" }}>أ/ محمد عبد الخالق</span>
             </div>
           ) : (
-            <Link 
-              to="/profile" 
-              className="student-pill" 
+            <Link
+              to="/profile"
+              className="student-pill"
               title="عرض وتعديل بيانات الطالب"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -102,7 +157,11 @@ export default function TopBar() {
                 </div>
               </div>
               <div className="student-pill-avatar">
-                {studentName ? studentName.trim().charAt(0) : <User size={18} />}
+                {studentName ? (
+                  studentName.trim().charAt(0)
+                ) : (
+                  <User size={18} />
+                )}
               </div>
             </Link>
           )}
@@ -126,7 +185,6 @@ export default function TopBar() {
             {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
-
       </div>
 
       {/* Mobile Drawer */}
@@ -134,31 +192,82 @@ export default function TopBar() {
         <div className="mobile-drawer">
           {isTeacher ? (
             <>
-              <NavLink to="/" end onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`} style={{ color: 'var(--cyan)' }}>
+              <NavLink
+                to="/"
+                end
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+                style={{ color: "var(--cyan)" }}
+              >
                 لوحة تحكم المستر 👨‍🏫
               </NavLink>
-              <NavLink to="/lessons" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink
+                to="/lessons"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+              >
                 معاينة الدروس
               </NavLink>
-              <NavLink to="/exams" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink
+                to="/exams"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+              >
                 معاينة الامتحانات
               </NavLink>
-              <NavLink to="/memos" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink
+                to="/memos"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+              >
                 مذكرات الـ PDF
               </NavLink>
             </>
           ) : (
             <>
-              <NavLink to="/" end onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink
+                to="/"
+                end
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+              >
                 الرئيسية
               </NavLink>
-              <NavLink to="/lessons" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink
+                to="/lessons"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+              >
                 الدروس والمحاضرات
               </NavLink>
-              <NavLink to="/exams" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink
+                to="/exams"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+              >
                 امتحانات التابلت
               </NavLink>
-              <NavLink to="/memos" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink
+                to="/memos"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `mobile-nav-link ${isActive ? "active" : ""}`
+                }
+              >
                 مذكرات PDF
               </NavLink>
             </>
@@ -167,7 +276,10 @@ export default function TopBar() {
           <div className="mobile-drawer-divider"></div>
 
           <button
-            onClick={() => { logout(); setMobileMenuOpen(false); }}
+            onClick={() => {
+              logout();
+              setMobileMenuOpen(false);
+            }}
             className="mobile-logout-btn"
           >
             <LogOut size={16} />

@@ -2,20 +2,24 @@ import { useState, useMemo } from "react";
 import {
   PlayCircle,
   FileText,
-  Clock,
   Filter,
   Search,
   Award,
   BookOpen,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useStudent } from "../context/useStudent";
 import { GRADES, BRANCHES, LESSONS_DATA } from "../data/platformData";
 
 export default function LessonSection({
-  student = {},
+  student: propStudent,
   onWatchLesson,
   onTakeQuiz,
   onDownloadPdf,
 }) {
+  const navigate = useNavigate();
+  const { student: ctxStudent, lessonsList, showToast } = useStudent();
+  const student = propStudent || ctxStudent || {};
   const studentName = student?.name || "طالب متميز";
   const studentGrade = student?.grade || "الصف الثالث الثانوي";
 
@@ -25,9 +29,10 @@ export default function LessonSection({
   const [searchQuery, setSearchQuery] = useState("");
 
   const gradeOptions = ["الكل", ...GRADES.map((g) => g.name)];
+  const allLessons = lessonsList?.length > 0 ? lessonsList : LESSONS_DATA;
 
   const filteredLessons = useMemo(() => {
-    return LESSONS_DATA.filter((lesson) => {
+    return allLessons.filter((lesson) => {
       const matchGrade =
         selectedGrade === "الكل" || lesson.grade === selectedGrade;
 
@@ -35,13 +40,37 @@ export default function LessonSection({
         selectedBranch === "الكل" || lesson.branch === selectedBranch;
 
       const matchSearch =
-        lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        lesson.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        lesson.branch.toLowerCase().includes(searchQuery.toLowerCase());
+        lesson.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lesson.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lesson.branch?.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchGrade && matchBranch && matchSearch;
     });
-  }, [selectedGrade, selectedBranch, searchQuery]);
+  }, [allLessons, selectedGrade, selectedBranch, searchQuery]);
+
+  const handleWatch = (lesson) => {
+    if (typeof onWatchLesson === "function") {
+      onWatchLesson(lesson);
+    } else {
+      navigate(`/watch/${lesson.id}`);
+    }
+  };
+
+  const handleQuiz = (lesson) => {
+    if (typeof onTakeQuiz === "function") {
+      onTakeQuiz(lesson);
+    } else {
+      navigate(`/quiz/${lesson.id}`);
+    }
+  };
+
+  const handleDownload = (lesson) => {
+    if (typeof onDownloadPdf === "function") {
+      onDownloadPdf(lesson);
+    } else {
+      showToast?.(`تم بدء تحميل مذكرة: ${lesson.pdfFile || lesson.title} 📥`);
+    }
+  };
 
   return (
     <section id="lessons-section" className="py-8">
@@ -198,11 +227,6 @@ export default function LessonSection({
                         <span className="text-cyan-300 bg-cyan-950/40 px-2 py-0.5 rounded-md border border-cyan-500/20">
                           {lesson.grade}
                         </span>
-
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-slate-500" />
-                          {lesson.duration}
-                        </span>
                       </div>
                     </div>
                   </div>
@@ -211,7 +235,7 @@ export default function LessonSection({
                   <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
                     {/* Watch Button */}
                     <button
-                      onClick={() => onWatchLesson(lesson)}
+                      onClick={() => handleWatch(lesson)}
                       className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-semibold text-xs flex items-center gap-1.5 shadow-md shadow-indigo-600/30 hover:opacity-90 transition-opacity cursor-pointer"
                     >
                       <PlayCircle className="w-4 h-4" />
@@ -220,7 +244,7 @@ export default function LessonSection({
 
                     {/* Quiz Button */}
                     <button
-                      onClick={() => onTakeQuiz(lesson)}
+                      onClick={() => handleQuiz(lesson)}
                       className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/20 font-medium text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
                       title="اختبار تقييمي للدرس"
                     >
@@ -230,7 +254,7 @@ export default function LessonSection({
 
                     {/* PDF Download Button */}
                     <button
-                      onClick={() => onDownloadPdf(lesson)}
+                      onClick={() => handleDownload(lesson)}
                       className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 hover:text-cyan-300 transition-colors cursor-pointer"
                       title="تحميل مذكرة الدرس PDF"
                     >

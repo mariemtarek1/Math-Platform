@@ -1,20 +1,21 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { StudentProvider, useStudent } from './context/StudentContext';
-import TopBar from './Components/TopBar';
-import Footer from './Components/Footer';
-import Toast from './Components/Toast';
-import AuthModal from './Components/AuthModal';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { StudentProvider } from "./context/StudentContext";
+import { useStudent } from "./context/useStudent";
+import TopBar from "./Components/TopBar";
+import Footer from "./Components/Footer";
+import Toast from "./Components/Toast";
+import AuthModal from "./Components/AuthModal";
 
 // Pages
-import LoginPage from './Pages/LoginPage';
-import HomePage from './Pages/HomePage';
-import LessonsPage from './Pages/LessonsPage';
-import LessonWatchPage from './Pages/LessonWatchPage';
-import ExamsPage from './Pages/ExamsPage';
-import MemosPage from './Pages/MemosPage';
-import ProfilePage from './Pages/ProfilePage';
-import TeacherDashboardPage from './Pages/TeacherDashboardPage';
-import NotFoundPage from './Pages/NotFoundPage';
+import LoginPage from "./Pages/LoginPage";
+import HomePage from "./Pages/HomePage";
+import LessonsPage from "./Pages/LessonsPage";
+import LessonWatchPage from "./Pages/LessonWatchPage";
+import ExamsPage from "./Pages/ExamsPage";
+import MemosPage from "./Pages/MemosPage";
+import ProfilePage from "./Pages/ProfilePage";
+import TeacherDashboardPage from "./Pages/TeacherDashboardPage";
+import NotFoundPage from "./Pages/NotFoundPage";
 
 function AppContent() {
   const { isAuthenticated, userRole } = useStudent();
@@ -39,9 +40,11 @@ function AppContent() {
       <main className="main-content">
         <Routes>
           {/* Main Home Route: Shows Teacher Dashboard if teacher, or Student Grade Hub if student */}
-          <Route 
-            path="/" 
-            element={userRole === 'teacher' ? <TeacherDashboardPage /> : <HomePage />} 
+          <Route
+            path="/"
+            element={
+              userRole === "teacher" ? <TeacherDashboardPage /> : <HomePage />
+            }
           />
 
           <Route path="/lessons" element={<LessonsPage />} />
@@ -52,9 +55,15 @@ function AppContent() {
           <Route path="/profile" element={<ProfilePage />} />
 
           {/* Teacher Dashboard */}
-          <Route 
-            path="/teacher-dashboard" 
-            element={userRole === 'teacher' ? <TeacherDashboardPage /> : <Navigate to="/" replace />} 
+          <Route
+            path="/teacher-dashboard"
+            element={
+              userRole === "teacher" ? (
+                <TeacherDashboardPage />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
           />
 
           <Route path="*" element={<NotFoundPage />} />
